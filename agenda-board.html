@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Week 15 Agenda Board — Soccer: The World's Game</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#14213d;--gold:#f2b705;--green:#1f7a4d;--paper:#f7f5ef;--ink:#1b1b1b;--muted:#5b6272;--line:#d9d4c7;--card:#fff;--em:#2b6cb0;--pr:#7b3fa0}
+*{box-sizing:border-box}
+body{margin:0;font-family:Lexend,system-ui,sans-serif;background:var(--paper);color:var(--ink);font-size:17px;line-height:1.5}
+body.big{font-size:21px}
+header{background:var(--navy);color:#fff;padding:14px 20px;display:flex;flex-wrap:wrap;align-items:center;gap:12px;justify-content:space-between}
+header h1{margin:0;font-size:1.25em;font-weight:800}
+header h1 span{color:var(--gold)}
+header .sub{font-size:.8em;opacity:.85}
+.tools button{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.5);border-radius:8px;padding:6px 10px;font:inherit;font-size:.8em;cursor:pointer}
+nav{display:flex;gap:6px;padding:10px 20px;background:#e9e4d6;flex-wrap:wrap}
+nav button{font:inherit;font-weight:600;border:0;border-radius:10px;padding:8px 14px;background:#fff;cursor:pointer;color:var(--navy)}
+nav button.on{background:var(--green);color:#fff}
+main{max-width:1180px;margin:0 auto;padding:18px 20px 60px}
+.titlebar{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:end;gap:10px;margin-bottom:12px}
+.titlebar h2{margin:0;font-size:1.6em;color:var(--navy)}
+.titlebar .date{color:var(--muted);font-weight:600}
+.grid{display:grid;grid-template-columns:1.05fr 1fr;gap:16px}
+@media(max-width:860px){.grid{grid-template-columns:1fr}}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.card h3{margin:0 0 8px;font-size:.85em;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.obj p{margin:4px 0}
+.obj b{color:var(--navy)}
+.std{font-size:.85em;color:var(--muted);margin-top:8px;border-top:1px dashed var(--line);padding-top:8px}
+.donow{background:var(--gold);border:0}
+.donow h3{color:var(--navy)}
+.donow .q{font-size:1.2em;font-weight:600}
+.frames{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.frame{background:#fff;border-radius:8px;padding:4px 10px;font-size:.9em}
+.frame.e{border-left:5px solid var(--em)}.frame.p{border-left:5px solid var(--pr)}
+.steps{display:flex;flex-direction:column;gap:10px;margin-top:16px}
+.step{background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.step .head{display:flex;align-items:center;gap:12px;padding:10px 14px;cursor:pointer}
+.step .time{font-weight:800;color:var(--navy);min-width:74px}
+.step .seg{font-weight:800;font-size:1.05em}
+.step .tag{margin-left:auto;font-size:.75em;font-weight:600;padding:3px 8px;border-radius:20px;background:#eee}
+.step.reading .head{border-left:8px solid #2b6cb0}
+.step.writing .head{border-left:8px solid #c05621}
+.step.elpa .head{border-left:8px solid var(--green)}
+.step.other .head{border-left:8px solid #999}
+.step.c2 .head{border-left:8px solid #b7791f;background:#fff8e1}
+.step .body{display:none;padding:0 14px 14px}
+.step.open .body{display:block}
+.step.done{opacity:.55}
+.lanes{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}
+@media(max-width:640px){.lanes{grid-template-columns:1fr}}
+.lane{border-radius:10px;padding:8px 10px;font-size:.92em}
+.lane.e{background:#ebf4ff;border-left:5px solid var(--em)}
+.lane.p{background:#f5ecfa;border-left:5px solid var(--pr)}
+.lane b{display:block;font-size:.8em;text-transform:uppercase;letter-spacing:.05em}
+.stepbtns{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.btn{font:inherit;font-size:.85em;font-weight:600;border:0;border-radius:8px;padding:7px 12px;cursor:pointer;background:var(--navy);color:#fff}
+.btn.alt{background:#e9e4d6;color:var(--navy)}
+.timer{position:fixed;right:16px;bottom:16px;background:var(--navy);color:#fff;border-radius:14px;padding:10px 16px;font-weight:800;font-size:1.6em;display:none;align-items:center;gap:12px;box-shadow:0 6px 20px rgba(0,0,0,.25)}
+.timer.show{display:flex}
+.timer.low{background:#c53030}
+.timer button{font:inherit;font-size:.45em;background:#fff;color:var(--navy);border:0;border-radius:6px;padding:4px 8px;cursor:pointer}
+.text p{margin:0 0 10px}
+.text .w{background:#fff3c4;border-radius:4px;padding:0 3px;cursor:help;border-bottom:2px solid var(--gold)}
+.vocab{display:flex;flex-wrap:wrap;gap:8px}
+.chip{background:#eef6f1;border:1px solid #cfe5d7;border-radius:20px;padding:4px 10px;font-size:.9em}
+.chip i{color:var(--muted);font-style:normal}
+.extra{white-space:pre-wrap;font-size:.92em;background:#f4f1e8;border-radius:10px;padding:10px 12px;margin-top:8px}
+.quiz .q{margin:12px 0;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:#fff}
+.quiz label{display:block;padding:4px 6px;border-radius:6px;cursor:pointer}
+.quiz label:hover{background:#f4f1e8}
+.quiz .ok{background:#e6f4ea}.quiz .no{background:#fdecea}
+.score{font-size:1.3em;font-weight:800;color:var(--green);margin-top:10px}
+table.c2{width:100%;border-collapse:collapse;font-size:.9em;margin-top:8px}
+table.c2 th,table.c2 td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+table.c2 th{background:#f4f1e8}
+.check label{display:block;padding:3px 0}
+.es{display:none;color:var(--muted);font-size:.9em;font-style:italic}
+body.showes .es{display:block}
+footer{color:var(--muted);font-size:.8em;text-align:center;padding:20px}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>Storm Studio · Week 15 · <span>Soccer: The World's Game</span></h1>
+    <div class="sub">EL 9–12 · Reading · Writing · ELPA21 Prep · Nov 16–20, 2026</div>
+  </div>
+  <div class="tools">
+    <button id="bigBtn" type="button">A+ Projector text</button>
+    <button id="esBtn" type="button">ES help on/off</button>
+  </div>
+</header>
+<nav id="tabs"></nav>
+<main id="app"></main>
+<div class="timer" id="timer"><span id="tLeft">0:00</span><button id="tPause" type="button">Pause</button><button id="tStop" type="button">✕</button></div>
+<footer>Click a step to open it · ▶ starts a timer for that step · ✓ marks it done · Lanes: <b style="color:#2b6cb0">Emerging</b> / <b style="color:#7b3fa0">Progressing</b></footer>
+
+<script>
+const DAYS=[
+{id:"mon",tab:"Mon 11/16",title:"How Soccer Got Its Rules",
+ co:"I can identify the central idea of an informational text about soccer history.",
+ lo:"I can write a 3-sentence summary using first, then, today.",
+ cando:"I can tell the main idea of a text and two details that support it.",
+ es:"Puedo decir la idea principal de un texto y dos detalles que la apoyan.",
+ std:"MS CCR ELA: RI.9-10.2, RI.9-10.4, W.9-10.2 · MS ELP: ELP 1, ELP 8, ELP 9 · ELPA21 domain: Listening",
+ donow:"What sports did you play as a child? Where?",fe:"I played ___ in ___.",fp:"When I was a child, I played ___ because ___.",
+ words:[["rule","regla"],["club","club"],["association","asociación"],["global","mundial"]],
+ text:["People have kicked balls for thousands of years. In ancient China, players kicked a leather ball through a net in a game called cuju. But for a long time, every town had different {rules}. Some players could carry the ball. Others could only kick it.",
+ "In 1863, a group of {clubs} met in London, England. They formed the Football {Association} and wrote one set of rules. The biggest rule was simple: no carrying the ball with your hands. Only the goalkeeper could use hands. Clubs that wanted to carry the ball went a different way and played rugby.",
+ "The name \"soccer\" comes from the word association. Most countries still call the sport football, but the United States uses soccer.",
+ "In 1904, FIFA was formed to organize soccer around the world. In 1930, Uruguay hosted the first World Cup and won it. Shared rules turned a local game into a {global} sport."],
+ steps:[
+ ["0–5","Do Now","other",5,"Turn and talk about the board question.","Use the frame on the yellow card.","Use the frame on the yellow card."],
+ ["5–30","Reading","reading",25,"Learn 4 words. Listen to Text 1. Reread with a partner. Find the central idea: What is the whole text mostly about?","Highlight 3 dates. Match each date to a picture. Choose the central idea from 3 options.","Box the dates. Underline the sentence with the central idea. Stretch: Why did rugby split from soccer?"],
+ ["30–60","Writing","writing",30,"Write a 3-sentence summary with First / Then / Today.","First, people ___. Then, in 1863, ___. Today, ___.","Write your own summary with transitions. Partner check: Is the central idea there?"],
+ ["60–85","ELPA21 Prep: Listening","elpa",25,"Listen to the Tryout Announcement two times. Answer 4 questions.","Picture choices. You may hear it a third time.","Answer all 4 + Why should students bring water?"],
+ ["85–90","Exit Ticket","other",5,"Sticky note.","Draw and label one rule of soccer.","Write the central idea of Text 1 in one sentence."]],
+ extra:{3:"Teacher script — Tryout Announcement:\n\"Good morning, Laurel High! Soccer tryouts start on Tuesday, December 1st, after school at 3:30 on the back field. Bring cleats, shin guards, and a water bottle. You must have a signed sports form from the front office. If it rains, tryouts move to the gym. See Coach Rivera with questions.\"\n\n1. What day do tryouts start?\n2. What time?\n3. Name two things to bring.\n4. Where do tryouts go if it rains?"}},
+{id:"tue",tab:"Tue 11/17",title:"One Tournament, Three Countries",
+ co:"I can use numbers and text features as evidence about the 2026 World Cup.",
+ lo:"I can compare two things using both, but, more than, while.",
+ cando:"I can compare two things and give facts from a text.",
+ es:"Puedo comparar dos cosas y dar datos del texto.",
+ std:"MS CCR ELA: RI.9-10.1, RI.9-10.3, SL.9-10.1 · MS ELP: ELP 1, ELP 2, ELP 3 · ELPA21 domain: Speaking",
+ donow:"Did you watch any 2026 World Cup games? Which team do you support?",fe:"I support ___.",fp:"I support ___ because ___.",
+ words:[["host","anfitrión"],["compete","competir"],["match","partido"],["history","historia"]],
+ text:["The 2026 FIFA World Cup made {history}. For the first time, three countries hosted it together: the United States, Mexico, and Canada.",
+ "It was also the biggest World Cup ever. Past tournaments had 32 teams. In 2026, 48 teams {competed}, and they played 104 {matches}. Games took place in 16 cities: 11 in the United States, 3 in Mexico, and 2 in Canada.",
+ "The tournament opened on June 11, 2026, at Estadio Azteca in Mexico City. Mexico also {hosted} the World Cup in 1970 and 1986, so it became the first country to host the men's tournament three times. The final was played on July 19 at MetLife Stadium in New Jersey.",
+ "More teams meant more countries had a chance to play on the world stage. For many fans in Mississippi, a World Cup game was only a road trip away."],
+ steps:[
+ ["0–5","Do Now","other",5,"Answer the board question with a partner.","Use the frame.","Use the frame."],
+ ["5–30","Reading","reading",25,"Read Text 2. Fill the chart \"Numbers Tell the Story\": number → what it means.","Match 5 numbers to 5 picture cards.","Finish the chart. Why was 2026 bigger than past World Cups? Use two numbers."],
+ ["30–60","Writing","writing",30,"Compare 2022 (1 host, 32 teams) and 2026 (3 hosts, 48 teams) with a Venn diagram. Write compare sentences.","Both ___ and ___ had ___. 2022 had ___, but 2026 had ___.","Write 4 sentences with both, but, more than, while."],
+ ["60–85","ELPA21 Prep: Speaking","elpa",25,"Record your answer on your Chromebook (45–60 seconds).","Prompt: Tell about the World Cup. Use the 3 frames on your card.","Prompt: Explain why the 2026 World Cup was special. Give two reasons. Use first, also, finally."],
+ ["85–90","Exit Ticket","other",5,"Mini whiteboards.","Show how many host countries. Say one.","Write one sentence comparing 2022 and 2026."]],
+ extra:{3:"Speaking checklist (0–4):\n☐ I answered the question\n☐ I used facts from the text\n☐ I used transition words\n☐ People can understand me"}},
+{id:"wed",tab:"Wed 11/18",title:"The Science of a Curving Kick",
+ co:"I can explain the cause-and-effect steps that make a soccer ball curve.",
+ lo:"I can explain a process using sequence words and because / so.",
+ cando:"I can explain how something happens, step by step.",
+ es:"Puedo explicar cómo pasa algo, paso a paso.",
+ std:"MS CCR ELA: RI.9-10.3, RI.9-10.4, W.9-10.2 · MS ELP: ELP 1, ELP 3, ELP 8 · ELPA21 domain: Reading",
+ donow:"Watch the paper ball spin. What did it do? Why?",fe:"It ___ because ___.",fp:"I think the ball curves because ___.",
+ words:[["spin","girar"],["force","fuerza"],["pressure","presión"],["curve","curva"]],
+ text:["Have you ever seen a soccer ball bend around a wall of players and into the goal? It looks like magic, but it is science.",
+ "First, the player kicks the ball off-center, on one side instead of the middle. This makes the ball {spin}. As the ball spins, it drags the air around it. On one side, the air moves faster. On the other side, it moves slower. Faster air creates lower {pressure}. Because the pressure is lower on one side, the ball is pushed toward that side, so its path {curves}.",
+ "Scientists call this the Magnus effect. The same {force} helps a baseball curve and a tennis ball dip.",
+ "Players practice for years to control spin. A little spin makes a small curve. A lot of spin makes a big curve. In 1997, Brazilian player Roberto Carlos curved a free kick so far that fans still talk about it today."],
+ steps:[
+ ["0–5","Do Now","other",5,"Watch the demo. Predict.","Use the frame.","Use the frame."],
+ ["5–30","Reading","reading",25,"Read Text 3. Build the cause → effect chain.","Put the 4 diagram panels in order. Label each with a word from the bank.","Finish a 4-link cause/effect chain. Stretch: What makes a big curve vs a small curve?"],
+ ["30–60","Writing","writing",30,"Write a \"How It Works\" paragraph: topic sentence + 4 steps with first, next, then, finally.","Use the paragraph frame and word bank.","Write it on your own. Use one because and one so. Partner reads it aloud to check the order."],
+ ["60–85","ELPA21 Prep: Reading","elpa",25,"Read \"Why Soccer Balls Have Panels.\" Answer 5 ELPA21-style items.","Items 1–4 with read-aloud help.","All 5 items. Explain your evidence choice in one sentence."],
+ ["85–90","Exit Ticket","other",5,"Collect.","Draw an arrow for the curve. Label spin.","The ball curves because ___, so ___."]],
+ extra:{3:"Why Soccer Balls Have Panels\nA soccer ball is not one smooth piece. It is made of panels that are joined together. For many years, most balls had 32 panels shaped like hexagons and pentagons. Today, many balls have fewer panels with special shapes. The seams between panels change how air moves around the ball. If a ball is too smooth, it can move in strange ways in the air. Designers test new balls in wind tunnels and with kicking machines before a big tournament.\n\n1. What is the main idea?\n2. What does seams mean?\n3. Select the sentence that tells how designers test balls.\n4. Which came first: 32-panel balls or new-shape balls?\n5. True or False: A smoother ball always flies straighter."}},
+{id:"thu",tab:"Thu 11/19",title:"Champions on the Field: Women's Soccer",
+ co:"I can cite text evidence to support a claim about women's soccer.",
+ lo:"I can write a claim with evidence using According to the text… and This shows…",
+ cando:"I can state my opinion and support it with facts from a text.",
+ es:"Puedo dar mi opinión y apoyarla con datos del texto.",
+ std:"MS CCR ELA: RI.9-10.1, W.9-10.1, L.9-10.4 · MS ELP: ELP 1, ELP 4, ELP 10 · ELPA21 domain: Writing",
+ donow:"Should girls and boys get the same chances in sports? Why?",fe:"Yes / No, because ___.",fp:"I believe ___ because ___.",
+ words:[["champion","campeón"],["equal","igual"],["attention","atención"],["step","paso"]],
+ text:["For many years, women's soccer got less {attention} and less money than men's soccer. That started to change on the field.",
+ "The first FIFA Women's World Cup was played in China in 1991. The United States won it. Since then, the U.S. women's team has won the tournament four times — in 1991, 1999, 2015, and 2019 — more than any other country.",
+ "In 1999, the final was played at the Rose Bowl in California. More than 90,000 fans filled the stadium. At the time, it was one of the largest crowds ever for a women's sporting event.",
+ "Players also worked for fair pay. In 2022, U.S. Soccer agreed to pay its men's and women's national teams {equally}. Players around the world saw it as an important {step}.",
+ "In 2023, Spain won the Women's World Cup for the first time. Today, more girls play soccer than ever, and many of them dream of becoming {champions} too."],
+ steps:[
+ ["0–5","Do Now","other",5,"Thumbs up / down, then share.","Use the frame.","Use the frame."],
+ ["5–30","Reading","reading",25,"Claim: Women's soccer has become more important over time. Find 3 pieces of evidence.","Highlight 3 numbers or dates. Match each to a picture.","Find 3 evidence sentences. Label each wins, fans, or pay. Stretch: Which evidence is strongest?"],
+ ["30–60","Writing","writing",30,"Write a Claim–Evidence–Explain paragraph. Underline the claim, box the evidence, circle the explanation. Finish and turn in today.","Women's soccer is important. According to the text, ___. This shows ___.","Use 2 pieces of evidence and a closing sentence."],
+ ["60–85","ELPA21 Prep: Writing","elpa",25,"Prompt: Should our school start a girls' soccer club? Give reasons. Plan 5 minutes (T-chart), write 15 minutes.","3–4 sentences with the frame card and word bank.","6+ sentences: opinion, 2 reasons, an example, a conclusion. Check capitals, periods, verb tense."],
+ ["85–90","Exit Ticket","other",5,"Collect.","Circle the claim in the model paragraph.","Write one This shows… sentence."]],
+ extra:{3:"Writing checklist (0–4):\n☐ I gave my opinion\n☐ I gave reasons\n☐ I used linking words (because, also, for example)\n☐ I wrote correct sentences"}},
+{id:"fri",tab:"Fri 11/20",title:"More Than a Game",
+ co:"I can identify the author's purpose and answer questions about the week's texts.",
+ lo:"I can write a true story with dialogue using quotation marks and speaker tags (said, asked, shouted).",
+ cando:"I can tell a true story about my life with what people said.",
+ es:"Puedo contar una historia verdadera de mi vida con lo que dijeron las personas.",
+ std:"MS CCR ELA: RI.9-10.6, W.9-10.3, L.9-10.2 · MS ELP: ELP 3, ELP 9, ELP 10 · ELPA21: all four domains",
+ donow:"Tell about a time you were part of a team. (Talk only. No writing yet.)",fe:"I was on a team when ___.",fp:"One time, my team ___.",
+ words:[["teamwork","trabajo en equipo"],["trust","confiar"],["community","comunidad"],["league","liga"]],
+ text:["Soccer is the most popular sport in the world. One reason is simple: you only need a ball. Kids play in streets, parks, and school yards, sometimes with a ball made of rolled-up plastic bags.",
+ "Soccer also teaches {teamwork}. Each team has eleven players on the field, and no one can win alone. Players must talk, listen, and {trust} each other. A good pass is a kind of conversation.",
+ "For many newcomers, soccer is a shared language. A student who just moved to a new country may not know many English words yet. But on the field, everyone understands a goal, a high five, and a cheer of \"¡Vamos!\" or \"Let's go!\"",
+ "Local {leagues} bring families and neighbors together on weekends. In this way, soccer is more than a game. It builds friendships and {community}."],
+ steps:[
+ ["0–5","Do Now","other",5,"Talk with a partner about a team you were on.","Use the frame.","Use the frame."],
+ ["5–25","Reading","reading",20,"Read Text 5. What is the author's purpose: inform, persuade, or entertain? Find proof.","Choose from 3 picture cards. Point to one proof sentence.","Name the purpose and quote one sentence that proves it."],
+ ["25–60","Writing: NBCT Component 2 · Sample 2","c2",35,"Write a true story about a time you were part of a team, played a game, or helped someone. Include at least two lines of dialogue.\nPlan 7 min → Write 20 min → Self-check 5 min.","Writing 2: picture planner with starters · model card \"___,\" I said. · 5–7 sentences, 2 dialogue lines · EN/ES glossary OK.","Writing 3: words-only planner · speaker-tag bank · 8–12 sentences, 3+ dialogue lines, a transition in each part · one strong feeling word."],
+ ["60–80","ELPA21 Prep: Mini-Test + 10-Question Quiz","elpa",20,"Take the 10-question quiz below on your Chromebook. Then do one quick task in each domain.","The quiz can be read aloud. Glossary on your desk.","Do it on your own. Review missed items with a partner."],
+ ["80–90","Close the Week","other",10,"Celebrate! Thanksgiving break: Nov 23–27. See you Nov 30.","Share one new word.","Share one thing you learned about soccer."]],
+ extra:{2:"Dialogue checklist\n☐ Capital letter to start each sentence\n☐ Period or ? or ! at the end\n☐ \"Quotation marks\" around the words people said\n☐ A speaker tag: said / asked / shouted\n— Writing 3 adds —\n☐ Comma inside the quotes: \"Let's go,\" she said.\n☐ New line for each new speaker"}}
+];
+
+const QUIZ=[
+["In what year did clubs in London write one set of soccer rules?",["1904","1863","1930","1991"],1],
+["Where does the word \"soccer\" come from?",["The word association","A city in England","The word socks","A player's name"],0],
+["Which country hosted and won the first World Cup in 1930?",["Brazil","England","Uruguay","Mexico"],2],
+["How many teams played in the 2026 World Cup?",["32","16","104","48"],3],
+["Which three countries hosted the 2026 World Cup?",["Mexico, Brazil, Canada","United States, Mexico, Canada","United States, Spain, Mexico","Canada, England, United States"],1],
+["What makes a kicked ball spin?",["Kicking it in the middle","Kicking it very softly","Kicking it off-center","A smooth ball"],2],
+["What is the Magnus effect?",["The force that makes a spinning ball curve","A rule about goalkeepers","The name of a famous stadium","A way to count passes"],0],
+["How many times has the U.S. women's team won the Women's World Cup?",["One","Two","Three","Four"],3],
+["What happened in 2022 for U.S. Soccer?",["It hosted the World Cup","Equal pay for the men's and women's national teams","It changed the rules","It made new balls"],1],
+["What is the author's main purpose in Text 5?",["To entertain with a funny story","To persuade readers to buy a ball","To inform readers that soccer builds teamwork and community","To explain how to score a goal"],2]
+];
+
+let cur="mon";
+const tabs=document.getElementById("tabs"),app=document.getElementById("app");
+function esc(s){return s.replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]))}
+function markText(p,words){return esc(p).replace(/\{([^}]+)\}/g,(m,w)=>{const hit=words.find(x=>w.toLowerCase().startsWith(x[0].slice(0,4)));return `<span class="w" title="${hit?hit[1]:""}">${w}</span>`})}
+function renderTabs(){tabs.innerHTML=DAYS.map(d=>`<button type="button" class="${d.id===cur?"on":""}" data-id="${d.id}">${d.tab}</button>`).join("");
+ tabs.querySelectorAll("button").forEach(b=>b.onclick=()=>{cur=b.dataset.id;try{location.hash=cur}catch(e){}render()})}
+function render(){
+ renderTabs();const d=DAYS.find(x=>x.id===cur);
+ let h=`<div class="titlebar"><h2>${d.title}</h2><div class="date">${d.tab} · Week 15</div></div>
+ <div class="grid"><div class="card obj"><h3>Today's Targets</h3>
+ <p><b>Content objective:</b> ${d.co}</p><p><b>Language objective:</b> ${d.lo}</p><p><b>Can-do:</b> ${d.cando}</p><p class="es">${d.es}</p>
+ <div class="std">${d.std}</div></div>
+ <div class="card donow"><h3>Do Now</h3><div class="q">${d.donow}</div>
+ <div class="frames"><span class="frame e">${d.fe}</span><span class="frame p">${d.fp}</span></div></div></div>
+ <div class="steps">`;
+ d.steps.forEach((s,i)=>{h+=`<div class="step ${s[2]}" data-i="${i}"><div class="head"><span class="time">${s[0]}</span><span class="seg">${s[1]}</span><span class="tag">${s[3]} min</span></div>
+ <div class="body"><div>${esc(s[4]).replace(/\n/g,"<br>")}</div><div class="lanes"><div class="lane e"><b>Emerging</b>${esc(s[5])}</div><div class="lane p"><b>Progressing</b>${esc(s[6])}</div></div>
+ ${d.extra&&d.extra[i]?`<div class="extra">${esc(d.extra[i])}</div>`:""}
+ <div class="stepbtns"><button class="btn" type="button" data-t="${s[3]}">▶ ${s[3]}-min timer</button><button class="btn alt" type="button" data-done>✓ Done</button></div></div></div>`});
+ h+=`</div><div class="grid" style="margin-top:16px"><div class="card text"><h3>Text ${DAYS.indexOf(d)+1}: ${d.title}</h3>${d.text.map(p=>`<p>${markText(p,d.words)}</p>`).join("")}<p class="es" style="font-size:.8em">Pasa el cursor o toca las palabras amarillas para ver el español.</p></div>
+ <div class="card"><h3>Key Words</h3><div class="vocab">${d.words.map(w=>`<span class="chip">${w[0]}<i>/ ${w[1]}</i></span>`).join("")}</div>
+ <h3 style="margin-top:14px">Week 15 Word Wall</h3><div class="vocab">${[["rule","regla"],["tournament","torneo"],["host","anfitrión"],["compete","competir"],["spin","girar"],["force","fuerza"],["champion","campeón"],["equal","igual"],["community","comunidad"],["teamwork","trabajo en equipo"]].map(w=>`<span class="chip">${w[0]} <i>/ ${w[1]}</i></span>`).join("")}</div></div></div>`;
+ if(cur==="fri"){h+=c2Panel()+quizPanel()}
+ app.innerHTML=h;
+ app.querySelectorAll(".step .head").forEach(el=>el.onclick=()=>el.parentElement.classList.toggle("open"));
+ app.querySelectorAll("[data-t]").forEach(b=>b.onclick=e=>{e.stopPropagation();startTimer(+b.dataset.t)});
+ app.querySelectorAll("[data-done]").forEach(b=>b.onclick=e=>{e.stopPropagation();const st=b.closest(".step");st.classList.toggle("done");st.classList.remove("open")});
+ if(cur==="fri")wireQuiz();
+}
+function c2Panel(){return `<div class="card" style="margin-top:16px;border:2px solid #b7791f"><h3>Teacher Panel · NBCT ENL Component 2 · Sample 2</h3>
+<p>Second writing sample for each featured student (Sample 1 was the Nov 10 cold write). Keep the time, seating, and supports the same as Sample 1 so the growth is real. Use letters only: Student A, Student B, Student C.</p>
+<table class="c2"><tr><th>Step</th><th>Time</th><th>What to do</th></tr>
+<tr><td>1. Set up</td><td>3 min</td><td>Read the prompt in English, then in Spanish. Show the dialogue checklist. Do not reteach.</td></tr>
+<tr><td>2. Plan</td><td>7 min</td><td>3-box plan: Beginning (who, where) → Middle (what happened + dialogue) → End (feeling / lesson).</td></tr>
+<tr><td>3. Write</td><td>20 min</td><td>Independent writing. Same conditions as Sample 1.</td></tr>
+<tr><td>4. Self-check</td><td>5 min</td><td>Tick the checklist. Underline the dialogue.</td></tr></table>
+<div class="check" style="margin-top:10px"><b>After class</b>
+<label><input type="checkbox"> Collect Sample 2 for Students A, B, C (+ spare). Remove names.</label>
+<label><input type="checkbox"> Scan the planner and draft. File them next to Sample 1.</label>
+<label><input type="checkbox"> Count the Sample 1 features again: sentences, dialogue lines, correct punctuation, speaker tags, transitions.</label>
+<label><input type="checkbox"> Commentary notes: the growth with evidence · which support caused it · the next step.</label>
+<label><input type="checkbox"> Note any change in conditions from Sample 1.</label></div></div>`}
+function quizPanel(){return `<div class="card quiz" style="margin-top:16px"><h3>10-Question Quiz · Texts 1–5</h3>${QUIZ.map((q,i)=>`<div class="q" data-q="${i}"><b>${i+1}. ${esc(q[0])}</b>${q[1].map((o,j)=>`<label><input type="radio" name="q${i}" value="${j}"> ${esc(o)}</label>`).join("")}</div>`).join("")}
+<div class="stepbtns"><button class="btn" type="button" id="check">Check my answers</button><button class="btn alt" type="button" id="reset">Try again</button></div><div class="score" id="score"></div></div>`}
+function wireQuiz(){
+ document.getElementById("check").onclick=()=>{let n=0;QUIZ.forEach((q,i)=>{const box=app.querySelector(`[data-q="${i}"]`);box.querySelectorAll("label").forEach(l=>l.classList.remove("ok","no"));const sel=box.querySelector("input:checked");const right=box.querySelectorAll("label")[q[2]];right.classList.add("ok");if(sel&&+sel.value===q[2])n++;else if(sel)sel.parentElement.classList.add("no")});
+  document.getElementById("score").textContent=`Score: ${n} / 10 ${n>=8?"— ¡Golazo!":n>=6?"— Good work!":"— Review the texts and try again."}`};
+ document.getElementById("reset").onclick=()=>render();
+}
+let tInt=null,tLeft=0,paused=false;const tEl=document.getElementById("timer"),tTxt=document.getElementById("tLeft");
+function fmt(s){return Math.floor(s/60)+":"+String(s%60).padStart(2,"0")}
+function startTimer(m){clearInterval(tInt);tLeft=m*60;paused=false;document.getElementById("tPause").textContent="Pause";tEl.classList.add("show");tEl.classList.remove("low");tTxt.textContent=fmt(tLeft);
+ tInt=setInterval(()=>{if(paused)return;tLeft--;tTxt.textContent=fmt(Math.max(tLeft,0));if(tLeft<=60)tEl.classList.add("low");if(tLeft<=0){clearInterval(tInt);tTxt.textContent="Time!"}},1000)}
+document.getElementById("tPause").onclick=()=>{paused=!paused;document.getElementById("tPause").textContent=paused?"Resume":"Pause"};
+document.getElementById("tStop").onclick=()=>{clearInterval(tInt);tEl.classList.remove("show")};
+document.getElementById("bigBtn").onclick=()=>document.body.classList.toggle("big");
+document.getElementById("esBtn").onclick=()=>document.body.classList.toggle("showes");
+function fromHash(){const h=(location.hash||"").slice(1);if(DAYS.some(d=>d.id===h))cur=h;else{const wd=new Date().getDay();cur=["mon","mon","tue","wed","thu","fri","mon"][wd]}}
+fromHash();window.addEventListener("hashchange",()=>{fromHash();render()});render();
+</script>
+</body>
+</html>

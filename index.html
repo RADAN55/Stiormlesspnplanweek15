@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>STORM STUDIO Magazine — Week 15: Soccer, The World's Game</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Lexend:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#16181d;--navy:#10203d;--gold:#f2b705;--grass:#1f7a4d;--cream:#fbf8f1;--muted:#5d6472;--line:#e3dccb;--em:#2b6cb0;--pr:#7b3fa0;--c2:#b7791f}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#2a2d33;font-family:Lexend,system-ui,sans-serif;color:var(--ink)}
+body.big{font-size:19px}
+.bar{position:fixed;top:0;left:0;right:0;height:52px;background:#111;color:#fff;display:flex;align-items:center;gap:10px;padding:0 14px;z-index:20}
+.bar .brand{font-family:"Playfair Display",serif;font-weight:900;letter-spacing:.04em}
+.bar .brand b{color:var(--gold)}
+.bar .sp{flex:1}
+.bar button,.bar select{font:inherit;font-size:.8rem;background:#2b2f37;color:#fff;border:1px solid #444;border-radius:8px;padding:6px 10px;cursor:pointer}
+.bar .pg{font-size:.8rem;opacity:.8;min-width:70px;text-align:center}
+.stage{position:fixed;top:52px;bottom:56px;left:0;right:0;display:flex;align-items:center;justify-content:center;perspective:2200px;padding:14px}
+.page{position:absolute;width:min(1100px,96vw);height:100%;max-height:calc(100vh - 136px);background:var(--cream);border-radius:6px;box-shadow:0 20px 50px rgba(0,0,0,.45);overflow:auto;transform-origin:left center;transition:transform .6s cubic-bezier(.3,.7,.2,1),opacity .6s;backface-visibility:hidden}
+.page.hidden-next{transform:rotateY(0) translateX(40px);opacity:0;pointer-events:none}
+.page.hidden-prev{transform:rotateY(-95deg);opacity:0;pointer-events:none}
+.page.cur{transform:rotateY(0);opacity:1}
+.foot{position:fixed;bottom:0;left:0;right:0;height:56px;display:flex;align-items:center;justify-content:center;gap:8px;background:#111;z-index:20;padding:0 10px;overflow-x:auto}
+.foot button{font:inherit;font-size:.75rem;border:0;border-radius:20px;padding:6px 11px;cursor:pointer;background:#2b2f37;color:#ddd;white-space:nowrap}
+.foot button.on{background:var(--gold);color:#111;font-weight:800}
+.foot .arrow{background:var(--grass);color:#fff;font-weight:800}
+/* cover */
+.cover{height:100%;min-height:620px;background:linear-gradient(160deg,#0d2e1d 0%,#1f7a4d 55%,#0f3d27 100%);color:#fff;position:relative;overflow:hidden;padding:34px 40px;display:flex;flex-direction:column}
+.cover .mast{font-family:"Playfair Display",serif;font-weight:900;font-size:clamp(46px,9vw,108px);line-height:.9;letter-spacing:-.02em}
+.cover .mast span{color:var(--gold)}
+.cover .issue{display:flex;justify-content:space-between;border-top:2px solid rgba(255,255,255,.6);border-bottom:2px solid rgba(255,255,255,.6);padding:6px 0;margin:10px 0 0;font-size:.8rem;letter-spacing:.12em;text-transform:uppercase}
+.cover .hero{margin-top:auto;max-width:640px;position:relative;z-index:2}
+.cover .kicker{background:var(--gold);color:#111;display:inline-block;font-weight:800;font-size:.8rem;letter-spacing:.1em;padding:4px 10px;text-transform:uppercase}
+.cover h1{font-family:"Playfair Display",serif;font-size:clamp(40px,6.5vw,78px);line-height:1;margin:12px 0 10px}
+.cover .lines{display:flex;flex-direction:column;gap:6px;margin-top:14px;font-weight:600}
+.cover .lines div::before{content:"▸ ";color:var(--gold)}
+.cover svg.ball{position:absolute;right:-70px;top:250px;width:min(460px,52vw);opacity:.95;z-index:1}
+.cover .badge{position:absolute;right:36px;bottom:34px;z-index:3;background:#fff;color:var(--navy);border-radius:50%;width:130px;height:130px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;font-weight:800;font-size:.8rem;transform:rotate(-10deg);box-shadow:0 6px 18px rgba(0,0,0,.3)}
+.cover .badge b{font-size:1.5rem;color:var(--c2)}
+/* inner */
+.inner{padding:30px 38px 40px}
+.folio{display:flex;justify-content:space-between;font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);border-bottom:1px solid var(--line);padding-bottom:8px;margin-bottom:18px}
+.dept{color:var(--grass);font-weight:800;letter-spacing:.14em;text-transform:uppercase;font-size:.78rem}
+h2.hed{font-family:"Playfair Display",serif;font-size:clamp(32px,4.6vw,56px);line-height:1.02;margin:6px 0 8px;color:var(--navy)}
+.dek{font-size:1.05rem;color:var(--muted);max-width:760px;margin-bottom:18px}
+.spread{display:grid;grid-template-columns:1.25fr .9fr;gap:30px}
+@media(max-width:860px){.spread{grid-template-columns:1fr}.inner{padding:22px 18px}}
+.article{column-count:2;column-gap:26px;font-size:1.02rem;line-height:1.65}
+@media(max-width:700px){.article{column-count:1}}
+.article p{margin:0 0 12px}
+.article p:first-child::first-letter{font-family:"Playfair Display",serif;float:left;font-size:4.2em;line-height:.8;padding:6px 8px 0 0;color:var(--grass);font-weight:900}
+.w{border-bottom:2px solid var(--gold);background:#fff4c9;cursor:pointer;position:relative;border-radius:3px;padding:0 2px}
+.w.flip::after{content:attr(data-es);position:absolute;left:0;top:-30px;background:var(--navy);color:#fff;font-size:.8rem;padding:3px 8px;border-radius:6px;white-space:nowrap;z-index:5}
+.pull{font-family:"Playfair Display",serif;font-style:italic;font-size:1.45rem;line-height:1.25;color:var(--grass);border-top:3px solid var(--gold);border-bottom:3px solid var(--gold);padding:12px 0;margin:6px 0 16px;break-inside:avoid}
+.side{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px 18px;align-self:start}
+.side h4{margin:0 0 8px;font-size:.75rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.side p{margin:5px 0;font-size:.92rem}
+.side b{color:var(--navy)}
+.std{font-size:.78rem;color:var(--muted);border-top:1px dashed var(--line);margin-top:10px;padding-top:8px}
+.vocab{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.chip{border:1px solid #cfe5d7;background:#eef6f1;border-radius:20px;padding:3px 10px;font-size:.85rem;cursor:pointer}
+.chip.show i{display:inline}.chip i{display:none;color:var(--muted);font-style:normal}
+.donow{background:var(--gold);border-radius:12px;padding:12px 16px;margin:18px 0}
+.donow .lbl{font-size:.72rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
+.donow .dq{font-family:"Playfair Display",serif;font-size:1.35rem;font-weight:700}
+.frames{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.frame{background:#fff;border-radius:6px;padding:3px 10px;font-size:.85rem}
+.frame.e{border-left:5px solid var(--em)}.frame.p{border-left:5px solid var(--pr)}
+.planhead{display:flex;align-items:end;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:26px;border-top:4px double var(--navy);padding-top:12px}
+.planhead h3{font-family:"Playfair Display",serif;font-size:1.6rem;margin:0;color:var(--navy)}
+.lanepick{display:flex;gap:4px}
+.lanepick button{font:inherit;font-size:.78rem;border:1px solid var(--line);background:#fff;border-radius:20px;padding:5px 10px;cursor:pointer}
+.lanepick button.on{background:var(--navy);color:#fff;border-color:var(--navy)}
+.timeline{display:grid;gap:10px;margin-top:12px}
+.st{display:grid;grid-template-columns:86px 1fr;background:#fff;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.st .t{padding:12px 10px;color:#fff;font-weight:800;font-size:.9rem;display:flex;flex-direction:column;gap:6px}
+.st.reading .t{background:#2b6cb0}.st.writing .t{background:#c05621}.st.elpa .t{background:var(--grass)}.st.other .t{background:#6b7280}.st.c2 .t{background:var(--c2)}
+.st .t small{font-weight:600;opacity:.85}
+.st .t button{font:inherit;font-size:.7rem;border:0;border-radius:6px;padding:4px 6px;background:rgba(255,255,255,.9);color:#111;cursor:pointer}
+.st .c{padding:10px 14px}
+.st .seg{font-weight:800;color:var(--navy)}
+.st .all{font-size:.92rem;margin:4px 0 6px}
+.lanes{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+body.lane-e .lane.p,body.lane-p .lane.e{display:none}
+body.lane-e .lanes,body.lane-p .lanes{grid-template-columns:1fr}
+@media(max-width:640px){.lanes{grid-template-columns:1fr}}
+.lane{border-radius:8px;padding:6px 10px;font-size:.86rem}
+.lane.e{background:#ebf4ff;border-left:4px solid var(--em)}.lane.p{background:#f5ecfa;border-left:4px solid var(--pr)}
+.lane b{display:block;font-size:.68rem;letter-spacing:.1em;text-transform:uppercase}
+details.extra{margin-top:8px;font-size:.86rem}
+details.extra summary{cursor:pointer;font-weight:600;color:var(--grass)}
+details.extra div{white-space:pre-wrap;background:#f4f0e5;border-radius:8px;padding:8px 10px;margin-top:6px}
+.done-btn{float:right;font:inherit;font-size:.7rem;border:1px solid var(--line);background:#fff;border-radius:6px;padding:2px 8px;cursor:pointer}
+.st.done{opacity:.5}
+/* contents */
+.toc{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px;margin-top:10px}
+.toc button{all:unset;cursor:pointer;background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px;display:block}
+.toc button:hover{border-color:var(--grass);box-shadow:0 4px 12px rgba(0,0,0,.08)}
+.toc .n{font-family:"Playfair Display",serif;font-size:2rem;font-weight:900;color:var(--gold);line-height:1}
+.toc .tt{font-family:"Playfair Display",serif;font-size:1.2rem;font-weight:700;color:var(--navy);margin:4px 0}
+.toc .ds{font-size:.82rem;color:var(--muted)}
+table.glance{width:100%;border-collapse:collapse;font-size:.88rem;margin-top:16px;background:#fff}
+table.glance th,table.glance td{border:1px solid var(--line);padding:7px 9px;text-align:left}
+table.glance th{background:var(--navy);color:#fff;font-weight:600}
+.letter{font-size:.95rem;max-width:760px;margin-top:16px;background:#fff;border-left:5px solid var(--gold);padding:12px 16px;border-radius:0 10px 10px 0}
+/* c2 */
+.report{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:860px){.report{grid-template-columns:1fr}}
+.box{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.box h4{margin:0 0 8px;font-family:"Playfair Display",serif;font-size:1.15rem;color:var(--navy)}
+table.sup{width:100%;border-collapse:collapse;font-size:.86rem}
+table.sup th,table.sup td{border:1px solid var(--line);padding:6px 8px;text-align:left;vertical-align:top}
+table.sup th{background:#fff4dc}
+.chk label{display:block;padding:4px 0;font-size:.9rem;cursor:pointer}
+.prompt{font-family:"Playfair Display",serif;font-style:italic;font-size:1.3rem;color:var(--c2);border-left:5px solid var(--c2);padding:6px 14px;margin:10px 0 16px;background:#fffaf0}
+.counter{display:grid;grid-template-columns:1.2fr repeat(3,1fr);gap:6px;font-size:.82rem;align-items:center}
+.counter input{width:100%;font:inherit;font-size:.82rem;padding:4px;border:1px solid var(--line);border-radius:6px}
+.counter .h{font-weight:800;color:var(--navy)}
+/* quiz */
+.q{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:10px;break-inside:avoid}
+.q b{display:block;margin-bottom:6px;color:var(--navy)}
+.q label{display:block;padding:4px 8px;border-radius:6px;cursor:pointer;font-size:.92rem}
+.q label:hover{background:#f4f0e5}
+.q .ok{background:#e3f3e8}.q .no{background:#fde8e6}
+.quizcols{column-count:2;column-gap:16px}
+@media(max-width:760px){.quizcols{column-count:1}}
+.btn{font:inherit;font-weight:700;border:0;border-radius:8px;padding:9px 14px;cursor:pointer;background:var(--navy);color:#fff}
+.btn.alt{background:#e9e3d3;color:var(--navy)}
+.score{font-family:"Playfair Display",serif;font-size:2rem;font-weight:900;color:var(--grass);margin-left:12px}
+/* back */
+.back{background:var(--navy);color:#fff;min-height:100%;padding:36px 40px}
+.back h2{font-family:"Playfair Display",serif;font-size:2.6rem;margin:0 0 6px;color:var(--gold)}
+.wall{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:18px}
+.card3d{perspective:800px;height:110px;cursor:pointer}
+.card3d .in{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d}
+.card3d.f .in{transform:rotateY(180deg)}
+.card3d .fa,.card3d .ba{position:absolute;inset:0;backface-visibility:hidden;border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:1.2rem;text-align:center;padding:8px}
+.card3d .fa{background:#fff;color:var(--navy)}
+.card3d .ba{background:var(--gold);color:#111;transform:rotateY(180deg)}
+.timer{position:fixed;right:16px;bottom:70px;background:var(--navy);color:#fff;border-radius:14px;padding:10px 16px;font-weight:800;font-size:1.6rem;display:none;align-items:center;gap:10px;z-index:30;box-shadow:0 6px 20px rgba(0,0,0,.4);border:2px solid var(--gold)}
+.timer.show{display:flex}.timer.low{background:#c53030}
+.timer button{font:inherit;font-size:.7rem;background:#fff;color:#111;border:0;border-radius:6px;padding:4px 8px;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="bar">
+  <div class="brand">STORM <b>STUDIO</b> · Teacher's Magazine</div>
+  <div class="sp"></div>
+  <select id="laneSel" aria-label="Lane view"><option value="both">Lanes: Both</option><option value="e">Emerging only</option><option value="p">Progressing only</option></select>
+  <button id="bigBtn" type="button">A+</button>
+  <span class="pg" id="pgNo"></span>
+</div>
+<div class="stage" id="stage"></div>
+<div class="foot" id="foot"></div>
+<div class="timer" id="timer"><span id="tLeft">0:00</span><button id="tPause" type="button">Pause</button><button id="tStop" type="button">✕</button></div>
+<script>
+const DAYS=[
+{id:"mon",tab:"Mon 11/16",title:"How Soccer Got Its Rules",
+ co:"I can identify the central idea of an informational text about soccer history.",
+ lo:"I can write a 3-sentence summary using first, then, today.",
+ cando:"I can tell the main idea of a text and two details that support it.",
+ es:"Puedo decir la idea principal de un texto y dos detalles que la apoyan.",
+ std:"MS CCR ELA: RI.9-10.2, RI.9-10.4, W.9-10.2 · MS ELP: ELP 1, ELP 8, ELP 9 · ELPA21 domain: Listening",
+ donow:"What sports did you play as a child? Where?",fe:"I played ___ in ___.",fp:"When I was a child, I played ___ because ___.",
+ words:[["rule","regla"],["club","club"],["association","asociación"],["global","mundial"]],
+ text:["People have kicked balls for thousands of years. In ancient China, players kicked a leather ball through a net in a game called cuju. But for a long time, every town had different {rules}. Some players could carry the ball. Others could only kick it.",
+ "In 1863, a group of {clubs} met in London, England. They formed the Football {Association} and wrote one set of rules. The biggest rule was simple: no carrying the ball with your hands. Only the goalkeeper could use hands. Clubs that wanted to carry the ball went a different way and played rugby.",
+ "The name \"soccer\" comes from the word association. Most countries still call the sport football, but the United States uses soccer.",
+ "In 1904, FIFA was formed to organize soccer around the world. In 1930, Uruguay hosted the first World Cup and won it. Shared rules turned a local game into a {global} sport."],
+ steps:[
+ ["0–5","Do Now","other",5,"Turn and talk about the board question.","Use the frame on the yellow card.","Use the frame on the yellow card."],
+ ["5–30","Reading","reading",25,"Learn 4 words. Listen to Text 1. Reread with a partner. Find the central idea: What is the whole text mostly about?","Highlight 3 dates. Match each date to a picture. Choose the central idea from 3 options.","Box the dates. Underline the sentence with the central idea. Stretch: Why did rugby split from soccer?"],
+ ["30–60","Writing","writing",30,"Write a 3-sentence summary with First / Then / Today.","First, people ___. Then, in 1863, ___. Today, ___.","Write your own summary with transitions. Partner check: Is the central idea there?"],
+ ["60–85","ELPA21 Prep: Listening","elpa",25,"Listen to the Tryout Announcement two times. Answer 4 questions.","Picture choices. You may hear it a third time.","Answer all 4 + Why should students bring water?"],
+ ["85–90","Exit Ticket","other",5,"Sticky note.","Draw and label one rule of soccer.","Write the central idea of Text 1 in one sentence."]],
+ extra:{3:"Teacher script — Tryout Announcement:\n\"Good morning, Laurel High! Soccer tryouts start on Tuesday, December 1st, after school at 3:30 on the back field. Bring cleats, shin guards, and a water bottle. You must have a signed sports form from the front office. If it rains, tryouts move to the gym. See Coach Rivera with questions.\"\n\n1. What day do tryouts start?\n2. What time?\n3. Name two things to bring.\n4. Where do tryouts go if it rains?"}},
+{id:"tue",tab:"Tue 11/17",title:"One Tournament, Three Countries",
+ co:"I can use numbers and text features as evidence about the 2026 World Cup.",
+ lo:"I can compare two things using both, but, more than, while.",
+ cando:"I can compare two things and give facts from a text.",
+ es:"Puedo comparar dos cosas y dar datos del texto.",
+ std:"MS CCR ELA: RI.9-10.1, RI.9-10.3, SL.9-10.1 · MS ELP: ELP 1, ELP 2, ELP 3 · ELPA21 domain: Speaking",
+ donow:"Did you watch any 2026 World Cup games? Which team do you support?",fe:"I support ___.",fp:"I support ___ because ___.",
+ words:[["host","anfitrión"],["compete","competir"],["match","partido"],["history","historia"]],
+ text:["The 2026 FIFA World Cup made {history}. For the first time, three countries hosted it together: the United States, Mexico, and Canada.",
+ "It was also the biggest World Cup ever. Past tournaments had 32 teams. In 2026, 48 teams {competed}, and they played 104 {matches}. Games took place in 16 cities: 11 in the United States, 3 in Mexico, and 2 in Canada.",
+ "The tournament opened on June 11, 2026, at Estadio Azteca in Mexico City. Mexico also {hosted} the World Cup in 1970 and 1986, so it became the first country to host the men's tournament three times. The final was played on July 19 at MetLife Stadium in New Jersey.",
+ "More teams meant more countries had a chance to play on the world stage. For many fans in Mississippi, a World Cup game was only a road trip away."],
+ steps:[
+ ["0–5","Do Now","other",5,"Answer the board question with a partner.","Use the frame.","Use the frame."],
+ ["5–30","Reading","reading",25,"Read Text 2. Fill the chart \"Numbers Tell the Story\": number → what it means.","Match 5 numbers to 5 picture cards.","Finish the chart. Why was 2026 bigger than past World Cups? Use two numbers."],
+ ["30–60","Writing","writing",30,"Compare 2022 (1 host, 32 teams) and 2026 (3 hosts, 48 teams) with a Venn diagram. Write compare sentences.","Both ___ and ___ had ___. 2022 had ___, but 2026 had ___.","Write 4 sentences with both, but, more than, while."],
+ ["60–85","ELPA21 Prep: Speaking","elpa",25,"Record your answer on your Chromebook (45–60 seconds).","Prompt: Tell about the World Cup. Use the 3 frames on your card.","Prompt: Explain why the 2026 World Cup was special. Give two reasons. Use first, also, finally."],
+ ["85–90","Exit Ticket","other",5,"Mini whiteboards.","Show how many host countries. Say one.","Write one sentence comparing 2022 and 2026."]],
+ extra:{3:"Speaking checklist (0–4):\n☐ I answered the question\n☐ I used facts from the text\n☐ I used transition words\n☐ People can understand me"}},
+{id:"wed",tab:"Wed 11/18",title:"The Science of a Curving Kick",
+ co:"I can explain the cause-and-effect steps that make a soccer ball curve.",
+ lo:"I can explain a process using sequence words and because / so.",
+ cando:"I can explain how something happens, step by step.",
+ es:"Puedo explicar cómo pasa algo, paso a paso.",
+ std:"MS CCR ELA: RI.9-10.3, RI.9-10.4, W.9-10.2 · MS ELP: ELP 1, ELP 3, ELP 8 · ELPA21 domain: Reading",
+ donow:"Watch the paper ball spin. What did it do? Why?",fe:"It ___ because ___.",fp:"I think the ball curves because ___.",
+ words:[["spin","girar"],["force","fuerza"],["pressure","presión"],["curve","curva"]],
+ text:["Have you ever seen a soccer ball bend around a wall of players and into the goal? It looks like magic, but it is science.",
+ "First, the player kicks the ball off-center, on one side instead of the middle. This makes the ball {spin}. As the ball spins, it drags the air around it. On one side, the air moves faster. On the other side, it moves slower. Faster air creates lower {pressure}. Because the pressure is lower on one side, the ball is pushed toward that side, so its path {curves}.",
+ "Scientists call this the Magnus effect. The same {force} helps a baseball curve and a tennis ball dip.",
+ "Players practice for years to control spin. A little spin makes a small curve. A lot of spin makes a big curve. In 1997, Brazilian player Roberto Carlos curved a free kick so far that fans still talk about it today."],
+ steps:[
+ ["0–5","Do Now","other",5,"Watch the demo. Predict.","Use the frame.","Use the frame."],
+ ["5–30","Reading","reading",25,"Read Text 3. Build the cause → effect chain.","Put the 4 diagram panels in order. Label each with a word from the bank.","Finish a 4-link cause/effect chain. Stretch: What makes a big curve vs a small curve?"],
+ ["30–60","Writing","writing",30,"Write a \"How It Works\" paragraph: topic sentence + 4 steps with first, next, then, finally.","Use the paragraph frame and word bank.","Write it on your own. Use one because and one so. Partner reads it aloud to check the order."],
+ ["60–85","ELPA21 Prep: Reading","elpa",25,"Read \"Why Soccer Balls Have Panels.\" Answer 5 ELPA21-style items.","Items 1–4 with read-aloud help.","All 5 items. Explain your evidence choice in one sentence."],
+ ["85–90","Exit Ticket","other",5,"Collect.","Draw an arrow for the curve. Label spin.","The ball curves because ___, so ___."]],
+ extra:{3:"Why Soccer Balls Have Panels\nA soccer ball is not one smooth piece. It is made of panels that are joined together. For many years, most balls had 32 panels shaped like hexagons and pentagons. Today, many balls have fewer panels with special shapes. The seams between panels change how air moves around the ball. If a ball is too smooth, it can move in strange ways in the air. Designers test new balls in wind tunnels and with kicking machines before a big tournament.\n\n1. What is the main idea?\n2. What does seams mean?\n3. Select the sentence that tells how designers test balls.\n4. Which came first: 32-panel balls or new-shape balls?\n5. True or False: A smoother ball always flies straighter."}},
+{id:"thu",tab:"Thu 11/19",title:"Champions on the Field: Women's Soccer",
+ co:"I can cite text evidence to support a claim about women's soccer.",
+ lo:"I can write a claim with evidence using According to the text… and This shows…",
+ cando:"I can state my opinion and support it with facts from a text.",
+ es:"Puedo dar mi opinión y apoyarla con datos del texto.",
+ std:"MS CCR ELA: RI.9-10.1, W.9-10.1, L.9-10.4 · MS ELP: ELP 1, ELP 4, ELP 10 · ELPA21 domain: Writing",
+ donow:"Should girls and boys get the same chances in sports? Why?",fe:"Yes / No, because ___.",fp:"I believe ___ because ___.",
+ words:[["champion","campeón"],["equal","igual"],["attention","atención"],["step","paso"]],
+ text:["For many years, women's soccer got less {attention} and less money than men's soccer. That started to change on the field.",
+ "The first FIFA Women's World Cup was played in China in 1991. The United States won it. Since then, the U.S. women's team has won the tournament four times — in 1991, 1999, 2015, and 2019 — more than any other country.",
+ "In 1999, the final was played at the Rose Bowl in California. More than 90,000 fans filled the stadium. At the time, it was one of the largest crowds ever for a women's sporting event.",
+ "Players also worked for fair pay. In 2022, U.S. Soccer agreed to pay its men's and women's national teams {equally}. Players around the world saw it as an important {step}.",
+ "In 2023, Spain won the Women's World Cup for the first time. Today, more girls play soccer than ever, and many of them dream of becoming {champions} too."],
+ steps:[
+ ["0–5","Do Now","other",5,"Thumbs up / down, then share.","Use the frame.","Use the frame."],
+ ["5–30","Reading","reading",25,"Claim: Women's soccer has become more important over time. Find 3 pieces of evidence.","Highlight 3 numbers or dates. Match each to a picture.","Find 3 evidence sentences. Label each wins, fans, or pay. Stretch: Which evidence is strongest?"],
+ ["30–60","Writing","writing",30,"Write a Claim–Evidence–Explain paragraph. Underline the claim, box the evidence, circle the explanation. Finish and turn in today.","Women's soccer is important. According to the text, ___. This shows ___.","Use 2 pieces of evidence and a closing sentence."],
+ ["60–85","ELPA21 Prep: Writing","elpa",25,"Prompt: Should our school start a girls' soccer club? Give reasons. Plan 5 minutes (T-chart), write 15 minutes.","3–4 sentences with the frame card and word bank.","6+ sentences: opinion, 2 reasons, an example, a conclusion. Check capitals, periods, verb tense."],
+ ["85–90","Exit Ticket","other",5,"Collect.","Circle the claim in the model paragraph.","Write one This shows… sentence."]],
+ extra:{3:"Writing checklist (0–4):\n☐ I gave my opinion\n☐ I gave reasons\n☐ I used linking words (because, also, for example)\n☐ I wrote correct sentences"}},
+{id:"fri",tab:"Fri 11/20",title:"More Than a Game",
+ co:"I can identify the author's purpose and answer questions about the week's texts.",
+ lo:"I can write a true story with dialogue using quotation marks and speaker tags (said, asked, shouted).",
+ cando:"I can tell a true story about my life with what people said.",
+ es:"Puedo contar una historia verdadera de mi vida con lo que dijeron las personas.",
+ std:"MS CCR ELA: RI.9-10.6, W.9-10.3, L.9-10.2 · MS ELP: ELP 3, ELP 9, ELP 10 · ELPA21: all four domains",
+ donow:"Tell about a time you were part of a team. (Talk only. No writing yet.)",fe:"I was on a team when ___.",fp:"One time, my team ___.",
+ words:[["teamwork","trabajo en equipo"],["trust","confiar"],["community","comunidad"],["league","liga"]],
+ text:["Soccer is the most popular sport in the world. One reason is simple: you only need a ball. Kids play in streets, parks, and school yards, sometimes with a ball made of rolled-up plastic bags.",
+ "Soccer also teaches {teamwork}. Each team has eleven players on the field, and no one can win alone. Players must talk, listen, and {trust} each other. A good pass is a kind of conversation.",
+ "For many newcomers, soccer is a shared language. A student who just moved to a new country may not know many English words yet. But on the field, everyone understands a goal, a high five, and a cheer of \"¡Vamos!\" or \"Let's go!\"",
+ "Local {leagues} bring families and neighbors together on weekends. In this way, soccer is more than a game. It builds friendships and {community}."],
+ steps:[
+ ["0–5","Do Now","other",5,"Talk with a partner about a team you were on.","Use the frame.","Use the frame."],
+ ["5–25","Reading","reading",20,"Read Text 5. What is the author's purpose: inform, persuade, or entertain? Find proof.","Choose from 3 picture cards. Point to one proof sentence.","Name the purpose and quote one sentence that proves it."],
+ ["25–60","Writing: NBCT Component 2 · Sample 2","c2",35,"Write a true story about a time you were part of a team, played a game, or helped someone. Include at least two lines of dialogue.\nPlan 7 min → Write 20 min → Self-check 5 min.","Writing 2: picture planner with starters · model card \"___,\" I said. · 5–7 sentences, 2 dialogue lines · EN/ES glossary OK.","Writing 3: words-only planner · speaker-tag bank · 8–12 sentences, 3+ dialogue lines, a transition in each part · one strong feeling word."],
+ ["60–80","ELPA21 Prep: Mini-Test + 10-Question Quiz","elpa",20,"Take the 10-question quiz below on your Chromebook. Then do one quick task in each domain.","The quiz can be read aloud. Glossary on your desk.","Do it on your own. Review missed items with a partner."],
+ ["80–90","Close the Week","other",10,"Celebrate! Thanksgiving break: Nov 23–27. See you Nov 30.","Share one new word.","Share one thing you learned about soccer."]],
+ extra:{2:"Dialogue checklist\n☐ Capital letter to start each sentence\n☐ Period or ? or ! at the end\n☐ \"Quotation marks\" around the words people said\n☐ A speaker tag: said / asked / shouted\n— Writing 3 adds —\n☐ Comma inside the quotes: \"Let's go,\" she said.\n☐ New line for each new speaker"}}
+];
+
+const QUIZ=[
+["In what year did clubs in London write one set of soccer rules?",["1904","1863","1930","1991"],1],
+["Where does the word \"soccer\" come from?",["The word association","A city in England","The word socks","A player's name"],0],
+["Which country hosted and won the first World Cup in 1930?",["Brazil","England","Uruguay","Mexico"],2],
+["How many teams played in the 2026 World Cup?",["32","16","104","48"],3],
+["Which three countries hosted the 2026 World Cup?",["Mexico, Brazil, Canada","United States, Mexico, Canada","United States, Spain, Mexico","Canada, England, United States"],1],
+["What makes a kicked ball spin?",["Kicking it in the middle","Kicking it very softly","Kicking it off-center","A smooth ball"],2],
+["What is the Magnus effect?",["The force that makes a spinning ball curve","A rule about goalkeepers","The name of a famous stadium","A way to count passes"],0],
+["How many times has the U.S. women's team won the Women's World Cup?",["One","Two","Three","Four"],3],
+["What happened in 2022 for U.S. Soccer?",["It hosted the World Cup","Equal pay for the men's and women's national teams","It changed the rules","It made new balls"],1],
+["What is the author's main purpose in Text 5?",["To entertain with a funny story","To persuade readers to buy a ball","To inform readers that soccer builds teamwork and community","To explain how to score a goal"],2]
+];
+const DEKS={
+mon:"Before 1863, every town played by its own rules. One meeting in London turned a messy local game into the world's sport.",
+tue:"Three host countries, 48 teams and 104 matches: the 2026 World Cup was the biggest ever, and it came to our part of the world.",
+wed:"It looks like magic when a free kick bends around the wall. It is really physics: spin, air and pressure.",
+thu:"Four World Cup titles, 90,000 fans in one stadium and a fight for equal pay. Women's soccer changed the game.",
+fri:"All you need is a ball. On the field, soccer becomes a shared language for newcomers, teammates and whole communities."};
+const PULLS={mon:"Shared rules turned a local game into a global sport.",tue:"For the first time, three countries hosted it together.",wed:"It looks like magic, but it is science.",thu:"More than 90,000 fans filled the stadium.",fri:"A good pass is a kind of conversation."};
+const DEPTS={mon:"History",tue:"World Report",wed:"Science",thu:"Champions",fri:"Community"};
+const WALL=[["rule","regla"],["tournament","torneo"],["host","anfitrión"],["compete","competir"],["spin","girar"],["force","fuerza"],["champion","campeón"],["equal","igual"],["community","comunidad"],["teamwork","trabajo en equipo"]];
+const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+function mark(p,words){return esc(p).replace(/\{([^}]+)\}/g,(m,w)=>{const hit=words.find(x=>w.toLowerCase().startsWith(x[0].slice(0,4)));return `<span class="w" data-es="${hit?esc(hit[1]):""}">${w}</span>`})}
+
+const PAGES=[];
+PAGES.push({name:"Cover",html:`<div class="cover">
+<div class="mast">STORM <span>STUDIO</span></div>
+<div class="issue"><span>Week 15 · Nov 16–20, 2026</span><span>EL 9–12 · Laurel High</span><span>Reading · Writing · ELPA21</span></div>
+<svg class="ball" viewBox="0 0 200 200" aria-hidden="true"><circle cx="100" cy="100" r="92" fill="#fff"/><polygon points="100,62 128,82 117,115 83,115 72,82" fill="#16181d"/><g fill="#16181d"><polygon points="100,10 120,24 112,40 88,40 80,24"/><polygon points="176,70 186,95 170,108 150,96 154,74"/><polygon points="150,168 128,184 112,170 120,148 142,148"/><polygon points="50,168 72,184 88,170 80,148 58,148"/><polygon points="24,70 14,95 30,108 50,96 46,74"/></g><g stroke="#16181d" stroke-width="3" fill="none"><path d="M100 62V40M128 82l22 14M117 115l3 33M83 115l-3 33M72 82L50 96"/></g></svg>
+<div class="hero"><span class="kicker">Special Issue</span><h1>Soccer: The World's Game</h1>
+<div>Five days, five feature stories, one big idea: how a simple game connects the whole world.</div>
+<div class="lines"><div>How a meeting in 1863 wrote the rules</div><div>Inside the biggest World Cup ever</div><div>The physics of the curving kick</div><div>Champions: the rise of women's soccer</div><div>Special report: NBCT Component 2, Sample 2</div></div></div>
+<div class="badge"><b>10-Q</b>Quiz inside<br>p. 9</div></div>`});
+
+PAGES.push({name:"Contents",html:`<div class="inner"><div class="folio"><span>Storm Studio</span><span>Contents</span><span>Week 15</span></div>
+<div class="dept">In This Issue</div><h2 class="hed">Contents</h2>
+<div class="toc">${DAYS.map((d,i)=>`<button type="button" data-go="${i+2}"><div class="n">0${i+1}</div><div class="tt">${esc(d.title)}</div><div class="ds">${d.tab} · ${DEPTS[d.id]}</div></button>`).join("")}
+<button type="button" data-go="7"><div class="n">06</div><div class="tt">Special Report: NBCT Component 2</div><div class="ds">Sample 2 procedure, supports, tracker</div></button>
+<button type="button" data-go="8"><div class="n">07</div><div class="tt">The Big Quiz</div><div class="ds">10 auto-graded questions, Texts 1–5</div></button>
+<button type="button" data-go="9"><div class="n">08</div><div class="tt">Word Wall</div><div class="ds">Flip cards, EN / ES</div></button></div>
+<table class="glance"><tr><th>Day</th><th>Reading focus</th><th>Writing product</th><th>ELPA21 Prep</th></tr>
+<tr><td>Mon</td><td>Central idea + vocabulary</td><td>3-sentence summary</td><td>Listening</td></tr>
+<tr><td>Tue</td><td>Text features, numbers as evidence</td><td>Compare/contrast sentences</td><td>Speaking</td></tr>
+<tr><td>Wed</td><td>Cause and effect</td><td>Explain a process</td><td>Reading</td></tr>
+<tr><td>Thu</td><td>Cite evidence for a claim</td><td>Claim–Evidence–Explain paragraph</td><td>Writing</td></tr>
+<tr><td>Fri</td><td>Author's purpose</td><td>NBCT C2 Sample 2: narrative with dialogue</td><td>Mini-test + 10-Q quiz</td></tr></table>
+<div class="letter"><b>From the editor's desk.</b> Every 90-minute block has three 30-minute segments: Reading, Writing, ELPA21 Prep. Each feature page holds that day's student text and the teacher plan beneath it. Use the <b>Lanes</b> menu at the top to show Emerging, Progressing, or both. Tap any yellow word for Spanish. Every segment has its own ▶ timer.</div></div>`});
+
+DAYS.forEach((d,i)=>{
+ const steps=d.steps.map((s,k)=>`<div class="st ${s[2]}"><div class="t">${s[0]}<small>${s[3]} min</small><button type="button" data-t="${s[3]}">▶ Timer</button></div>
+ <div class="c"><button type="button" class="done-btn">✓ done</button><div class="seg">${esc(s[1])}</div><div class="all">${esc(s[4]).replace(/\n/g,"<br>")}</div>
+ <div class="lanes"><div class="lane e"><b>Emerging</b>${esc(s[5])}</div><div class="lane p"><b>Progressing</b>${esc(s[6])}</div></div>
+ ${d.extra&&d.extra[k]?`<details class="extra"><summary>Script / items / checklist</summary><div>${esc(d.extra[k])}</div></details>`:""}</div></div>`).join("");
+ const paras=d.text.map(p=>`<p>${mark(p,d.words)}</p>`);
+ paras.splice(2,0,`<div class="pull">“${PULLS[d.id]}”</div>`);
+ PAGES.push({name:d.tab.split(" ")[0],html:`<div class="inner"><div class="folio"><span>Storm Studio · Week 15</span><span>${d.tab}</span><span>Feature 0${i+1}</span></div>
+ <div class="dept">${DEPTS[d.id]} · Text ${i+1}</div><h2 class="hed">${esc(d.title)}</h2><div class="dek">${DEKS[d.id]}</div>
+ <div class="spread"><div class="article">${paras.join("")}</div>
+ <aside class="side"><h4>Today's Targets</h4><p><b>Content objective:</b> ${esc(d.co)}</p><p><b>Language objective:</b> ${esc(d.lo)}</p><p><b>Can-do:</b> ${esc(d.cando)}</p><p style="color:var(--muted);font-style:italic">${esc(d.es)}</p>
+ <div class="std">${esc(d.std)}</div><h4 style="margin-top:12px">Key Words · tap to flip</h4><div class="vocab">${d.words.map(w=>`<span class="chip">${w[0]} <i>/ ${w[1]}</i></span>`).join("")}</div></aside></div>
+ <div class="donow"><div class="lbl">Do Now</div><div class="dq">${esc(d.donow)}</div><div class="frames"><span class="frame e">${esc(d.fe)}</span><span class="frame p">${esc(d.fp)}</span></div></div>
+ <div class="planhead"><h3>The Lesson Plan · 90 minutes</h3></div><div class="timeline">${steps}</div></div>`});
+});
+
+PAGES.push({name:"NBCT C2",html:`<div class="inner"><div class="folio"><span>Storm Studio · Week 15</span><span>Fri 11/20</span><span>Special Report</span></div>
+<div class="dept" style="color:var(--c2)">Special Report · NBCT ENL</div><h2 class="hed">Component 2: Sample 2</h2>
+<div class="dek">The second writing sample for each featured student (Sample 1 was the Nov 10 cold write). Keep the conditions the same so the growth is real. Use letters only: Student A, B, C. Do not name the school.</div>
+<div class="prompt">“Write a true story about a time you were part of a team, played a game, or helped someone. Include at least two lines of dialogue that show what people said.”</div>
+<div class="report"><div class="box"><h4>The 35-minute procedure</h4>
+<div class="st c2" style="margin-bottom:8px"><div class="t">3 min<button type="button" data-t="3">▶</button></div><div class="c"><div class="seg">Set up</div>Read the prompt in English, then in Spanish. Show the dialogue checklist. Do not reteach.</div></div>
+<div class="st c2" style="margin-bottom:8px"><div class="t">7 min<button type="button" data-t="7">▶</button></div><div class="c"><div class="seg">Plan</div>3-box plan: Beginning (who, where) → Middle (what happened + dialogue) → End (feeling / lesson).</div></div>
+<div class="st c2" style="margin-bottom:8px"><div class="t">20 min<button type="button" data-t="20">▶</button></div><div class="c"><div class="seg">Write</div>Independent writing. Same seating and time as Sample 1.</div></div>
+<div class="st c2"><div class="t">5 min<button type="button" data-t="5">▶</button></div><div class="c"><div class="seg">Self-check</div>Tick the checklist. Underline the dialogue.</div></div></div>
+<div class="box"><h4>Supports by writing level</h4><table class="sup"><tr><th></th><th>Writing 2 (Student A)</th><th>Writing 3 (Students B, C)</th></tr>
+<tr><td>Planner</td><td>3 boxes, picture cues + starters</td><td>3 boxes, words only</td></tr>
+<tr><td>Dialogue</td><td>Model card: "___," I said. / My friend asked, "___?"</td><td>Speaker-tag bank + tag before/middle/after</td></tr>
+<tr><td>Length</td><td>5–7 sentences, 2 dialogue lines</td><td>8–12 sentences, 3+ dialogue lines, a transition in each part</td></tr>
+<tr><td>Language</td><td>EN/ES glossary allowed</td><td>Word card; one strong feeling word</td></tr>
+<tr><td>Checklist</td><td>4 items</td><td>6 items (+ commas inside quotes, new speaker new line)</td></tr></table></div>
+<div class="box"><h4>Growth tracker · Sample 1 → Sample 2</h4><p style="font-size:.8rem;color:var(--muted);margin-top:0">Type the counts as you score. They stay only on this screen; copy them into your Commentary Notes doc.</p>
+<div class="counter"><span class="h">Feature</span><span class="h">Student A</span><span class="h">Student B</span><span class="h">Student C</span>
+${["Total sentences","Dialogue lines","Correct dialogue punctuation","Speaker tags used","Transitions"].map(f=>`<span>${f}</span>`+[1,2,3].map(()=>`<input placeholder="S1 → S2">`).join("")).join("")}</div></div>
+<div class="box chk"><h4>After class</h4>
+<label><input type="checkbox"> Collect Sample 2 for Students A, B, C (+ spare). Remove names.</label>
+<label><input type="checkbox"> Scan the planner and draft. File them next to Sample 1.</label>
+<label><input type="checkbox"> Count the same features as Sample 1.</label>
+<label><input type="checkbox"> Commentary notes: the growth with evidence · which support caused it · the next step.</label>
+<label><input type="checkbox"> Note any change in conditions from Sample 1.</label>
+<p style="font-size:.8rem;color:var(--muted)">Commentary format: 11-pt Arial, double-spaced.</p></div></div></div>`});
+
+PAGES.push({name:"Quiz",html:`<div class="inner"><div class="folio"><span>Storm Studio · Week 15</span><span>Fri 11/20</span><span>The Big Quiz</span></div>
+<div class="dept">ELPA21 Prep · Texts 1–5</div><h2 class="hed">The Big Quiz</h2><div class="dek">Ten questions about this week's features. Choose your answers, then check.</div>
+<div class="quizcols">${QUIZ.map((q,i)=>`<div class="q" data-q="${i}"><b>${i+1}. ${esc(q[0])}</b>${q[1].map((o,j)=>`<label><input type="radio" name="q${i}" value="${j}"> ${esc(o)}</label>`).join("")}</div>`).join("")}</div>
+<div style="display:flex;align-items:center;gap:8px;margin-top:10px"><button class="btn" type="button" id="check">Check my answers</button><button class="btn alt" type="button" id="reset">Try again</button><span class="score" id="score"></span></div></div>`});
+
+PAGES.push({name:"Word Wall",html:`<div class="back"><h2>Word Wall</h2><div>Week 15 · tap a card to flip it to Spanish.</div>
+<div class="wall">${WALL.map(w=>`<div class="card3d"><div class="in"><div class="fa">${w[0]}</div><div class="ba">${w[1]}</div></div></div>`).join("")}</div>
+<p style="margin-top:28px;opacity:.8">Next issue: Week 16 · Nov 30 – Dec 4 · Happy Thanksgiving break (Nov 23–27)!</p></div>`});
+
+const stage=document.getElementById("stage"),foot=document.getElementById("foot");
+stage.innerHTML=PAGES.map((p,i)=>`<section class="page hidden-next" data-i="${i}">${p.html}</section>`).join("");
+const els=[...stage.querySelectorAll(".page")];
+foot.innerHTML=`<button class="arrow" type="button" id="prev">◀</button>`+PAGES.map((p,i)=>`<button type="button" data-go="${i}">${p.name}</button>`).join("")+`<button class="arrow" type="button" id="next">▶</button>`;
+let cur=0;
+function go(n){n=Math.max(0,Math.min(PAGES.length-1,n));els.forEach((e,i)=>{e.className="page "+(i===n?"cur":i<n?"hidden-prev":"hidden-next")});cur=n;
+ foot.querySelectorAll("[data-go]").forEach(b=>b.classList.toggle("on",+b.dataset.go===n));document.getElementById("pgNo").textContent=`Page ${n+1} / ${PAGES.length}`;els[n].scrollTop=0;
+ try{history.replaceState(null,"","#p"+(n+1))}catch(e){}}
+document.addEventListener("click",e=>{
+ const g=e.target.closest("[data-go]");if(g){go(+g.dataset.go);return}
+ if(e.target.id==="prev")go(cur-1);if(e.target.id==="next")go(cur+1);
+ const w=e.target.closest(".w");if(w){w.classList.toggle("flip");return}
+ const c=e.target.closest(".chip");if(c){c.classList.toggle("show");return}
+ const f=e.target.closest(".card3d");if(f){f.classList.toggle("f");return}
+ const t=e.target.closest("[data-t]");if(t){startTimer(+t.dataset.t);return}
+ const d=e.target.closest(".done-btn");if(d){d.closest(".st").classList.toggle("done");return}
+ if(e.target.id==="check")checkQuiz();if(e.target.id==="reset")resetQuiz();
+});
+document.addEventListener("keydown",e=>{if(e.target.tagName==="INPUT")return;if(e.key==="ArrowRight")go(cur+1);if(e.key==="ArrowLeft")go(cur-1)});
+let sx=null;stage.addEventListener("touchstart",e=>{sx=e.touches[0].clientX},{passive:true});
+stage.addEventListener("touchend",e=>{if(sx===null)return;const dx=e.changedTouches[0].clientX-sx;if(Math.abs(dx)>70)go(cur+(dx<0?1:-1));sx=null});
+function checkQuiz(){let n=0;QUIZ.forEach((q,i)=>{const box=document.querySelector(`[data-q="${i}"]`);const labs=box.querySelectorAll("label");labs.forEach(l=>l.classList.remove("ok","no"));labs[q[2]].classList.add("ok");const s=box.querySelector("input:checked");if(s&&+s.value===q[2])n++;else if(s)s.parentElement.classList.add("no")});
+ document.getElementById("score").textContent=`${n}/10 ${n>=8?"¡Golazo!":n>=6?"Good work!":"Reread and try again"}`}
+function resetQuiz(){document.querySelectorAll(".q input").forEach(i=>i.checked=false);document.querySelectorAll(".q label").forEach(l=>l.classList.remove("ok","no"));document.getElementById("score").textContent=""}
+document.getElementById("laneSel").onchange=e=>{document.body.classList.remove("lane-e","lane-p");if(e.target.value!=="both")document.body.classList.add("lane-"+e.target.value)};
+document.getElementById("bigBtn").onclick=()=>document.body.classList.toggle("big");
+let tInt=null,tLeft=0,paused=false;const tEl=document.getElementById("timer"),tTxt=document.getElementById("tLeft");
+const fmt=s=>Math.floor(s/60)+":"+String(s%60).padStart(2,"0");
+function startTimer(m){clearInterval(tInt);tLeft=m*60;paused=false;document.getElementById("tPause").textContent="Pause";tEl.classList.add("show");tEl.classList.remove("low");tTxt.textContent=fmt(tLeft);
+ tInt=setInterval(()=>{if(paused)return;tLeft--;tTxt.textContent=fmt(Math.max(tLeft,0));if(tLeft<=60)tEl.classList.add("low");if(tLeft<=0){clearInterval(tInt);tTxt.textContent="Time!"}},1000)}
+document.getElementById("tPause").onclick=()=>{paused=!paused;document.getElementById("tPause").textContent=paused?"Resume":"Pause"};
+document.getElementById("tStop").onclick=()=>{clearInterval(tInt);tEl.classList.remove("show")};
+const m=(location.hash||"").match(/^#p(\d+)$/);go(m?+m[1]-1:0);
+</script>
+</body>
+</html>
